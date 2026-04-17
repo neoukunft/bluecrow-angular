@@ -1,0 +1,1 @@
+# BlueCrow Architecture & Design Rationale
