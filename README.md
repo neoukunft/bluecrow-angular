@@ -34,7 +34,7 @@ O projeto resolve o problema do **Atomic Design** através da separação de dom
 
 ## 5. Problemas que Corrigimos (via StackOverflow/Research)
 
-Pesquisei problemas clássicos que nossa engine evita preventivamente:
+Problemas clássicos que nossa engine evita preventivamente:
 
 * A. **O Erro "ExpressionChangedAfterItHasBeenCheckedError"**
 
