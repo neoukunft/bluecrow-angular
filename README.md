@@ -126,17 +126,54 @@ Um sistema de `signals` global que mantém o rastro de todas as instâncias ativ
 A engine espera um conjunto mínimo de utilitários CSS para processar as variáveis:
 
 ```css
+
 .grid {
-  display: grid;
-  grid-template-columns: var(--cols);
-  grid-template-rows: var(--rows);
-  gap: var(--gap);
-  padding: var(--padding);
+    display: grid;
+}
+
+.grid-template-columns {
+    grid-template-columns: var(--cols);
+}
+
+.grid-template-rows {
+    grid-template-rows: var(--rows);
 }
 
 .grid-area {
-  grid-column: var(--area-col);
-  grid-row: var(--area-row);
+    grid-column: var(--area-col);
+    grid-row: var(--area-row);
+}
+
+.grid-auto-flow {
+    grid-auto-flow: var(--direction);
+}
+
+.box-padding {
+    padding: var(--padding);
+}
+
+.box-margin {
+    margin: var(--margin);
+}
+
+.box-gap {
+    gap: var(--gap);
+}
+
+.box-justify-content {
+    justify-content: var(--justify-content);
+}
+
+.box-align-content {
+    align-content: var(--align-content);
+}
+
+.box-justify-items {
+    justify-items: var(--justify-items);
+}
+
+.box-align-items {
+    align-items: var(--align-items);
 }
 ```
 
