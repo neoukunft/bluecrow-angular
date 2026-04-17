@@ -54,7 +54,7 @@ Problemas clássicos que nossa engine evita preventivamente:
 
     `Problema Comum`: No CSS puro, grid-template-areas é rígido. Mudar a posição de um item exige reescrever a string inteira no CSS.
 
-    `Nossa Solução`: Seu método setArea usa CSS Variables (--area-col). Isso permite mudar a posição de um único componente sem afetar os outros e sem precisar tocar em arquivos .css ou .scss.
+    `Nossa Solução`: O método setArea usa CSS Variables (--area-col). Isso permite mudar a posição de um único componente sem afetar os outros e sem precisar tocar em arquivos .css ou .scss.
 
 * D. **Conflitos de Seletor em Componentes Dinâmicos**
 
