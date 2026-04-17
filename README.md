@@ -8,7 +8,17 @@ Este README foi estruturado para refletir a sofisticação da arquitetura que vo
 
 Ao contrário de frameworks CSS tradicionais, o BlueCrow trata o layout como uma **camada de infraestrutura programável**, separando o "onde as coisas estão" de "como as coisas se parecem".
 
-## 2. 🏗️ A Arquitetura das 3 Camadas
+## 2. 🌟 Possibilidades Estratégicas
+
+A arquitetura BlueCrow abre portas para padrões de UX que antes eram complexos ou custosos:
+
+* `Micro-Layouts Reais (Widget Isolation)`: Componentes tornam-se 100% agnósticos ao contexto. Um widget de "Gráfico" pode se comportar como uma lista em uma sidebar (300px) ou como um painel expandido no centro (1200px) sem uma única Media Query de tela.
+
+* `Layout-as-a-Service`: Comunicação visual entre componentes distantes via Registry. Qualquer parte da aplicação pode solicitar mudanças no BoxModel ou Grid de outro container de forma reativa e tipada.
+
+* `Transições Estruturais Dinâmicas`: Facilita a implementação de estados de "Loading/Skeleton" ou "Sidebar Collapse" apenas reconfigurando o Signal de layout, garantindo que a estrutura mude de forma coordenada.
+
+## 3. 🏗️ A Arquitetura das 3 Camadas
 
 O projeto resolve o problema do **Atomic Design** através da separação de domínios espaciais:
 
@@ -16,9 +26,7 @@ O projeto resolve o problema do **Atomic Design** através da separação de dom
 2.  **Camada de Lógica (Widgets):** Agrupamentos funcionais que utilizam Flexbox para gerenciar a relação e o fluxo entre componentes.
 3.  **Camada de Apresentação (Componentes):** Átomos puros e "burros" que apenas renderizam UI, sem conhecimento de margens externas ou posicionamento global.
 
----
-
-## 3. 🚀 Recursos Principais
+## 4. 🚀 Recursos Principais
 
 * **Container-First Responsiveness:** Responsividade baseada no tamanho do próprio container (via `ResizeObserver`), não na viewport.
 * **Signal-Based Registry:** Acesso reativo a qualquer instância de layout de qualquer lugar da aplicação.
@@ -28,7 +36,37 @@ O projeto resolve o problema do **Atomic Design** através da separação de dom
 
 ---
 
-## 4. 🛠️ Como Funciona
+## 5. Problemas que Corrigimos (via StackOverflow/Research)
+
+Pesquisei problemas clássicos que nossa engine evita preventivamente:
+
+* A. **O Erro "ExpressionChangedAfterItHasBeenCheckedError"**
+
+    `Problema Comum`: No StackOverflow, muitos desenvolvedores sofrem com esse erro ao tentar mudar o layout baseado no tamanho do DOM durante o ciclo de vida do Angular.
+
+    `Nossa Solução`: Ao usar Signals e atualizar o estado via ResizeObserver (que roda em uma microtask separada), nós "pulamos" o ciclo de checagem síncrona, garantindo que o Angular aceite a mudança de estado sem quebrar a renderização.
+
+* B. **Vazamento de Memória (Resize/Mutation Observers)**
+
+    `Problema Comum`: Iniciantes esquecem de chamar .disconnect(). Em SPAs, isso acumula milhares de observers "fantasmas" que tentam atualizar elementos que nem existem mais.
+
+    `Nossa Solução`: A centralização no destroy() da classe + o unregisterLayout() no ngOnDestroy da diretiva cria um "caixão" seguro para a instância. Se o elemento sai do DOM, o código morre com ele.
+
+* C. **Especificidade de Grid-Areas**
+
+    `Problema Comum`: No CSS puro, grid-template-areas é rígido. Mudar a posição de um item exige reescrever a string inteira no CSS.
+
+    `Nossa Solução`: Seu método setArea usa CSS Variables (--area-col). Isso permite mudar a posição de um único componente sem afetar os outros e sem precisar tocar em arquivos .css ou .scss.
+
+* D. **Conflitos de Seletor em Componentes Dinâmicos**
+
+    `Problema Comum`: Quando você tem 5 instâncias do mesmo componente na tela, IDs e classes CSS globais se atropelam.
+
+    `Nossa Solução`: O uso de data-area dentro do escopo da instância (this.layout.querySelectorAll) garante que o BlueCrow só mexa nos filhos daquele container específico. É um encapsulamento de estilo via JS.
+
+---
+
+## 6. 🛠️ Como Funciona
 
 ### 1. Definindo a Estrutura (HTML)
 Use a diretiva `blueCrowLayout` para transformar qualquer elemento em um nó inteligente.
@@ -74,7 +112,7 @@ export class DashboardComponent {
 
 ---
 
-## 5. 🧬 Anatomia Técnica
+## 7. 🧬 Anatomia Técnica
 
 ### A Classe `BlueCrowLayout`
 É o coração da engine. Ela encapsula:
@@ -87,7 +125,7 @@ Um sistema de `signals` global que mantém o rastro de todas as instâncias ativ
 
 ---
 
-## 6. 🎨 CSS Bridge (O Contrato Visual)
+## 8. 🎨 CSS Bridge (O Contrato Visual)
 
 A engine espera um conjunto mínimo de utilitários CSS para processar as variáveis:
 
@@ -108,60 +146,11 @@ A engine espera um conjunto mínimo de utilitários CSS para processar as variá
 
 ---
 
-## 7. 🧹 Garbage Collection
+## 9. 🧹 Garbage Collection
 A engine é projetada para aplicações de longa duração (Dashboards/CMS).
 * `destroy()`: Desconecta todos os observers e anula referências ao elemento host.
 * `unregisterLayout()`: Remove a instância do Signal Registry, liberando a memória imediatamente.
 
-## 8. Problemas que Corrigimos (via StackOverflow/Research)
-
-Pesquisei problemas clássicos que sua engine evita preventivamente:
-
-* A. **O Erro "ExpressionChangedAfterItHasBeenCheckedError"**
-
-    `Problema Comum`: No StackOverflow, muitos desenvolvedores sofrem com esse erro ao tentar mudar o layout baseado no tamanho do DOM durante o ciclo de vida do Angular.
-
-    `Nossa Solução`: Ao usar Signals e atualizar o estado via ResizeObserver (que roda em uma microtask separada), nós "pulamos" o ciclo de checagem síncrona, garantindo que o Angular aceite a mudança de estado sem quebrar a renderização.
-
-* B. **Vazamento de Memória (Resize/Mutation Observers)**
-
-    `Problema Comum`: Iniciantes esquecem de chamar .disconnect(). Em SPAs, isso acumula milhares de observers "fantasmas" que tentam atualizar elementos que nem existem mais.
-
-    `Nossa Solução`: A centralização no destroy() da classe + o unregisterLayout() no ngOnDestroy da diretiva cria um "caixão" seguro para a instância. Se o elemento sai do DOM, o código morre com ele.
-
-* C. **Especificidade de Grid-Areas**
-
-    `Problema Comum`: No CSS puro, grid-template-areas é rígido. Mudar a posição de um item exige reescrever a string inteira no CSS.
-
-    `Nossa Solução`: Seu método setArea usa CSS Variables (--area-col). Isso permite mudar a posição de um único componente sem afetar os outros e sem precisar tocar em arquivos .css ou .scss.
-
-* D. **Conflitos de Seletor em Componentes Dinâmicos**
-
-    `Problema Comum`: Quando você tem 5 instâncias do mesmo componente na tela, IDs e classes CSS globais se atropelam.
-
-    `Nossa Solução`: O uso de data-area dentro do escopo da instância (this.layout.querySelectorAll) garante que o BlueCrow só mexa nos filhos daquele container específico. É um encapsulamento de estilo via JS.
-
-## 9. 🌟 Possibilidades Estratégicas
-
-A arquitetura BlueCrow abre portas para padrões de UX que antes eram complexos ou custosos:
-
-* `Micro-Layouts Reais (Widget Isolation)`: Componentes tornam-se 100% agnósticos ao contexto. Um widget de "Gráfico" pode se comportar como uma lista em uma sidebar (300px) ou como um painel expandido no centro (1200px) sem uma única Media Query de tela.
-
-* `Layout-as-a-Service`: Comunicação visual entre componentes distantes via Registry. Qualquer parte da aplicação pode solicitar mudanças no BoxModel ou Grid de outro container de forma reativa e tipada.
-
-* `Transições Estruturais Dinâmicas`: Facilita a implementação de estados de "Loading/Skeleton" ou "Sidebar Collapse" apenas reconfigurando o Signal de layout, garantindo que a estrutura mude de forma coordenada.
-
-## 10. 🛡️ Resiliência Técnica (Fixes Inerentes)
-
-O BlueCrow foi desenhado para mitigar nativamente os erros mais comuns no desenvolvimento Angular moderno:
-
-* **Prevenção de ExpressionChangedAfterItHasBeenCheckedError**: Ao utilizar Signals em conjunto com Observers assíncronos (microtasks), as atualizações de layout ocorrem fora do ciclo de checagem síncrona, garantindo estabilidade na renderização.
-
-* **Gestão de Memória Anti-Leak**: Diferente de implementações manuais de ResizeObserver, o BlueCrow centraliza o disconnect() e anula referências ao DOM no ngOnDestroy, permitindo que o Garbage Collector limpe instâncias de SPAs de longa duração.
-
-* **Encapsulamento de Escopo Espacial**: O uso de seletores baseados em data-area dentro do contexto da instância evita o vazamento de estilos e conflitos de posicionamento que ocorrem ao usar classes globais em componentes repetidos.
-
-* **Abstração de Complexidade Grid**: Resolve a rigidez do grid-template-areas do CSS puro, permitindo atualizações parciais de coordenadas (setArea) sem a necessidade de reescrever toda a string de definição do grid.
 ---
 
 > **Nota do Engenheiro:** "Não é sobre fazer o componente caber na tela, é sobre fazer a tela entender o componente." 🐦‍⬛
