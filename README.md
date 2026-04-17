@@ -30,7 +30,7 @@ O projeto resolve o problema do **Atomic Design** através da separação de dom
 
 * **Container-First Responsiveness:** Responsividade baseada no tamanho do próprio container (via `ResizeObserver`), não na viewport.
 * **Signal-Based Registry:** Acesso reativo a qualquer instância de layout de qualquer lugar da aplicação.
-* **Dynamic Grid Areas:** Controle granular de áreas (`column`/`row`) via atributos `data-name`, permitindo que componentes se movam na grid dinamicamente.
+* **Dynamic Grid Areas:** Controle granular de áreas (`column`/`row`) via atributos `data-area`, permitindo que componentes se movam na grid dinamicamente.
 * **Zero Memory Leak:** Gestão rigorosa do ciclo de vida com limpeza automática de Observers e referências do DOM no `ngOnDestroy`.
 * **Hybrid Box Model:** Abstração simplificada de eixos (`axisX`, `axisY`) que mapeia automaticamente para `align-content` ou `align-items`.
 
