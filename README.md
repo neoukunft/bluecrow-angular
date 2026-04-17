@@ -4,6 +4,8 @@
 
 Ao contrário de frameworks CSS tradicionais, o BlueCrow trata o layout como uma **camada de infraestrutura programável**, separando o "onde as coisas estão" de "como as coisas se parecem".
 
+> **Nota do Engenheiro:** "Não é sobre fazer o componente caber na tela, é sobre fazer a tela entender o componente." 🐦‍⬛
+
 ## 2. 🌟 Possibilidades Estratégicas
 
 A arquitetura BlueCrow abre portas para padrões de UX que antes eram complexos ou custosos:
@@ -183,7 +185,3 @@ A engine espera um conjunto mínimo de utilitários CSS para processar as variá
 A engine é projetada para aplicações de longa duração (Dashboards/CMS).
 * `destroy()`: Desconecta todos os observers e anula referências ao elemento host.
 * `unregisterLayout()`: Remove a instância do Signal Registry, liberando a memória imediatamente.
-
----
-
-> **Nota do Engenheiro:** "Não é sobre fazer o componente caber na tela, é sobre fazer a tela entender o componente." 🐦‍⬛
