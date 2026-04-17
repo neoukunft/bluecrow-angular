@@ -7,7 +7,7 @@
 
 Ao contrário de abordagens e frameworks CSS tradicionais, o BlueCrow trata o layout espacial e a navegação como uma **camada de infraestrutura programável**, injetando "Inteligência Espacial e Navegacional" diretamente no código de forma reativa.
 
-> **Nota do Engenheiro:** "Não é sobre fazer o componente caber na tela, é sobre fazer a tela entender o componente. E não é sobre dizer ao router onde o componente está, é o componente dizendo ao router quem ele é e aonde ele pertence." 🐦‍⬛
+> **Nota do Engenheiro:** "Não é sobre fazer o componente caber na tela, é sobre fazer a tela entender o componente." 🐦‍⬛
 
 ---
 
