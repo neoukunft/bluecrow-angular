@@ -59,7 +59,7 @@ describe('Engine Documentação: BlueCrowLayout', () => {
       const layoutInstance = getLayout('test-layout')() as BlueCrowLayout;
       layoutInstance.setArea('sidebar', { column: '1 / 2', row: 1 });
 
-      const sidebar = layoutEl.querySelector('[data-name="sidebar"]') as HTMLElement;
+      const sidebar = layoutEl.querySelector('[data-area="sidebar"]') as HTMLElement;
       expect(sidebar.classList.contains('grid-area')).toBe(true);
       // Validando o CSS Bridge Injetado Imperativamente
       expect(sidebar.style.getPropertyValue('--area-col')).toBe('1 / 2');
@@ -69,6 +69,10 @@ describe('Engine Documentação: BlueCrowLayout', () => {
 
   describe('3. Responsividade por Container (ResizeObserver Bridge)', () => {
     it('deve inicializar o ResizeObserver e declarar a tag para CSS Container Queries', () => {
+      // Mockamos a ResizeObserver para rodar em ambientes headless (como JSDOM) sem quebrar o teste
+      const originalResizeObserver = (globalThis as any).ResizeObserver;
+      (globalThis as any).ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
+
       const layoutInstance = getLayout('test-layout')() as BlueCrowLayout;
 
       // Passando as quebras declarativas programáveis
@@ -76,6 +80,9 @@ describe('Engine Documentação: BlueCrowLayout', () => {
 
       // Valida se preparou o terreno no DOM pra que stylesheets reajam se precisarem isoladamente
       expect(layoutEl.style.containerType).toBe('size');
+
+      // Restaura pro original
+      (globalThis as any).ResizeObserver = originalResizeObserver;
     });
   });
 

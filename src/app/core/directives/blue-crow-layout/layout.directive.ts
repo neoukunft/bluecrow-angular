@@ -269,7 +269,7 @@ export class BlueCrowLayout {
     const observerConfig = config || {
       childList: true,
       attributes: true,
-      attributeFilter: ['data-name'],
+      attributeFilter: ['data-area'],
       subtree: true
     };
 
